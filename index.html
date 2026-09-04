@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorio Rocket Launcher Terminal</title>
+    <style>
+        /* =========================================================
+   FACTORIO ESCAPE ROOM
+   Responsive CSS - desktop + Pixel 5a
+========================================================= */
+
+:root {
+    --bg-dark: #181818;
+    --factorio-orange: #e67e22;
+    --factorio-dark: #2c2520;
+    --panel-bg: #3a322a;
+    --text-color: #e2d6b5;
+    --border-color: #5c4e43;
+    --danger-red: #c0392b;
+    --danger-hover: #e74c3c;
+}
+
+
+/* =========================================================
+   BASIS
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--text-color);
+    font-family: "Courier New", Courier, monospace;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    width: 100%;
+
+    background: linear-gradient(
+        180deg,
+        #221a15 0%,
+        #15100d 100%
+    );
+
+    border-bottom: 4px solid var(--border-color);
+
+    padding: 15px 25px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    z-index: 10;
+}
+
+
+/* =========================================================
+   VIDEO
+========================================================= */
+
+.video-container {
+    position: relative;
+
+    width: 100%;
+    max-width: 1320px;
+    height: 100dvh;
+    margin: 0 auto;
+
+    line-height: 0;
+    overflow: hidden;
+}
+
+.video-container video {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-height: calc(100vh - 80px);
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   ALGEMENE OVERLAY
+========================================================= */
+
+.overlay {
+    display: none;
+
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.7);
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 50;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   ALGEMENE POPUP
+========================================================= */
+
+.popup {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   EERSTE CODE POPUP
+========================================================= */
+
+.code-popup {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.8);
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 100;
+}
+
+.code-box {
+    width: min(90vw, 400px);
+
+    background: var(--panel-bg);
+
+    border: 3px solid var(--factorio-orange);
+    border-radius: 8px;
+
+    padding: 30px 25px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.code-box h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.code-box input {
+    display: block;
+
+    width: 100%;
+    max-width: 220px;
+
+    padding: 12px;
+
+    margin: 15px auto;
+
+    background: #181818;
+    color: white;
+
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+
+    font-family: "Courier New", Courier, monospace;
+    font-size: 18px;
+
+    text-align: center;
+
+    outline: none;
+}
+
+.code-box input:focus {
+    border-color: var(--factorio-orange);
+}
+
+.code-box button {
+    min-width: 130px;
+
+    padding: 12px 25px;
+
+    background: var(--factorio-orange);
+    color: #181818;
+
+    border: none;
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.code-box button:active {
+    transform: scale(0.97);
+}
+
+#codeError {
+    display: none;
+
+    margin-bottom: 0;
+
+    color: var(--danger-red);
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   FACTORIO INVENTORY
+========================================================= */
+
+.game-screen {
+    position: relative;
+
+    width: 100%;
+    max-width: 1320px;
+
+    margin: 0 auto;
+
+    touch-action: none;
+
+    overflow: hidden;
+}
+
+.inventory-background {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   INVENTORY ITEMS
+========================================================= */
+
+.inventory-item {
+    position: absolute;
+
+    width: 2.6%;
+    aspect-ratio: 1 / 1;
+
+    object-fit: contain;
+
+    cursor: grab;
+
+    z-index: 20;
+
+    user-select: none;
+    -webkit-user-drag: none;
+
+    touch-action: none;
+
+    transition: opacity 0.1s ease;
+}
+
+.inventory-item:active {
+    cursor: grabbing;
+}
+
+
+/* =========================================================
+   LINKER INVENTORY
+========================================================= */
+
+.item1 {
+    left: 2%;
+    top: 14%;
+}
+
+.item2 {
+    left: 5%;
+    top: 14%;
+}
+
+.item3 {
+    left: 8%;
+    top: 14%;
+}
+
+.item4 {
+    left: 11%;
+    top: 14%;
+}
+
+
+/* =========================================================
+   LINKER INVENTORY DROPZONE
+========================================================= */
+
+.left-inventory {
+    position: absolute;
+
+    left: 2%;
+    top: 13%;
+
+    width: 31%;
+    height: 67%;
+
+    z-index: 5;
+}
+
+
+/* =========================================================
+   RECHTER INVENTORY / ROCKET
+========================================================= */
+
+.rocket-inventory {
+    position: absolute;
+
+    left: 69.1%;
+    top: 9.5%!important;
+
+    width: 28.9%;
+    height: 16%;
+
+    z-index: 10;
+
+    gap: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    touch-action: none;
+}
+
+
+/* Items die rechts in de rocket zitten */
+
+.rocket-inventory .inventory-item {
+      position: relative;
+
+    left: auto !important;
+    top: auto !important;
+
+    width: 10.8%;
+    height: auto;
+
+    aspect-ratio: 1 / 1;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+
+    margin: 0;
+}
+
+
+/* Visuele feedback tijdens slepen */
+
+.rocket-inventory.drag-over {
+  outline: 2px solid var(--factorio-orange);
+
+    background: rgba(230, 126, 34, 0.12);
+}
+
+
+/* =========================================================
+   DELIVER CARGO KNOP
+========================================================= */
+
+.deliver-button {
+    position: absolute;
+
+    left: 83.7%;
+    top: 34.8%;
+
+    width: 14.5%;
+    height: 5%;
+
+    z-index: 30;
+
+    background: transparent;
+    border: none;
+
+    color: transparent;
+
+    cursor: pointer;
+
+    padding: 0;
+
+    transition: background 0.15s ease;
+}
+.deliver-button.ready {
+    background: rgba(210, 210, 210, 0.35);
+
+    border: 1px solid rgba(220, 220, 220, 0.55);
+
+    border-radius: 2px;
+}
+
+.deliver-button.ready:hover {
+    background: rgba(230, 230, 230, 0.5);
+}
+
+/* =========================================================
+   INVENTORY FOUTMELDING
+========================================================= */
+
+#inventoryError {
+      display: none;
+
+    position: absolute;
+
+    /*
+       Links van de Deliver Cargo knop
+    */
+    left: 67.8%;
+    top: 34.8%;
+
+    width: 14.5%;
+    height: 5%;
+
+    z-index: 40;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    color: #ff5555;
+
+    font-size: clamp(9px, 1.1vw, 16px);
+    font-weight: bold;
+
+    line-height: 1.1;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   SUCCES GIF
+========================================================= */
+
+.success-gif {
+    display: none;
+
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: min(80vw, 400px);
+    max-height: 70vh;
+
+    object-fit: contain;
+
+    z-index: 150;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LAATSTE CODE POPUP
+========================================================= */
+
+.new-code-popup {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.85);
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 200;
+}
+
+.new-code-box {
+    width: min(90vw, 450px);
+
+    background: var(--panel-bg);
+
+    border: 3px solid var(--factorio-orange);
+    border-radius: 8px;
+
+    padding: 30px 25px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
+}
+
+.new-code-box h2 {
+    margin-top: 0;
+
+    color: var(--factorio-orange);
+
+    font-size: clamp(18px, 5vw, 28px);
+}
+
+.new-code-box p {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   EINDCODE
+========================================================= */
+
+.final-code {
+    margin: 25px 0;
+
+    color: var(--factorio-orange);
+
+    font-size: clamp(36px, 12vw, 60px);
+
+    font-weight: bold;
+
+    letter-spacing: clamp(5px, 2vw, 12px);
+
+    text-align: center;
+}
+
+
+/* Sluitknop */
+
+.new-code-box button {
+    min-width: 130px;
+
+    padding: 12px 25px;
+
+    background: var(--factorio-orange);
+    color: #181818;
+
+    border: none;
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.new-code-box button:active {
+    transform: scale(0.97);
+}
+
+
+/* Oude error, voor het geval deze nog in je HTML staat */
+
+#newCodeError {
+    display: none;
+
+    color: var(--danger-red);
+}
+
+
+/* =========================================================
+   PIXEL 5a / MOBIELE TELEFOONS
+========================================================= */
+
+@media (max-width: 600px) {
+
+    body {
+        overflow: hidden;
+    }
+
+    header {
+        padding: 10px 15px;
+
+        border-bottom-width: 3px;
+    }
+
+    .video-container {
+        width: 100%;
+    }
+
+    .video-container video {
+        width: 100%;
+        height: auto;
+
+        max-height: calc(100vh - 60px);
+    }
+
+
+    /* -------------------------
+       CODE POPUP
+    ------------------------- */
+
+    .code-popup {
+        padding: 15px;
+    }
+
+    .code-box {
+        width: 90vw;
+
+        padding: 25px 18px;
+
+        border-width: 2px;
+    }
+
+    .code-box h3 {
+        font-size: 18px;
+    }
+
+    .code-box input {
+        width: 80%;
+
+        font-size: 18px;
+
+        padding: 11px;
+    }
+
+    .code-box button {
+        width: 80%;
+        max-width: 220px;
+
+        padding: 12px;
+    }
+
+
+    /* -------------------------
+       INVENTORY
+    ------------------------- */
+
+    .game-screen {
+        width: 100vw;
+
+        max-width: none;
+    }
+
+
+    /* Items blijven relatief aan de inventory */
+    .inventory-item {
+        width: 2.6%;
+    }
+
+
+    /* -------------------------
+       SUCCES GIF
+    ------------------------- */
+
+    .success-gif {
+        width: 75vw;
+        max-width: 350px;
+    }
+
+
+    /* -------------------------
+       EINDCODE POPUP
+    ------------------------- */
+
+    .new-code-popup {
+        padding: 15px;
+    }
+
+    .new-code-box {
+        width: 90vw;
+
+        padding: 25px 18px;
+
+        border-width: 2px;
+    }
+
+    .new-code-box h2 {
+        font-size: 20px;
+    }
+
+    .new-code-box p {
+        font-size: 14px;
+    }
+
+    .new-code-box button {
+        width: 80%;
+        max-width: 220px;
+    }
+}
+
+
+/* =========================================================
+   HEEL KLEINE SCHERMEN
+   Bijvoorbeeld 360px breed
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .code-box {
+        padding: 20px 15px;
+    }
+
+    .code-box h3 {
+        font-size: 16px;
+    }
+
+    .new-code-box {
+        padding: 20px 15px;
+    }
+
+    .new-code-box h2 {
+        font-size: 18px;
+    }
+
+    .final-code {
+        margin: 20px 0;
+
+        font-size: 36px;
+        letter-spacing: 5px;
+    }
+}
+
+
+/* =========================================================
+   LANDSCAPE OP TELEFOON
+========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+    header {
+        padding: 6px 12px;
+    }
+
+    .video-container video {
+        max-height: calc(100vh - 45px);
+    }
+
+    .code-box {
+        max-height: 90vh;
+        overflow-y: auto;
+
+        padding: 15px 20px;
+    }
+
+    .new-code-box {
+        max-height: 90vh;
+        overflow-y: auto;
+
+        padding: 15px 20px;
+    }
+
+    .final-code {
+        margin: 10px 0;
+    }
+}
+
+
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: #181818;
+
+    overflow: hidden;
+}
+
+body {
+    font-family: "Courier New", Courier, monospace;
+    color: var(--text-color);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* =====================================================
+   VIDEO + GAME CONTAINER
+===================================================== */
+
+.video-container {
+    position: relative;
+
+    width: 100vw;
+    height: 100dvh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    background: #181818;
+}
+
+
+/* Video vult scherm zo groot mogelijk zonder vervorming */
+
+.video-container video {
+    display: block;
+
+    max-width: 100vw;
+    max-height: 100dvh;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+}
+
+
+/* =====================================================
+   INVENTORY OVERLAY
+===================================================== */
+
+.overlay {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100dvh;
+
+    background: #181818;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 50;
+
+    overflow: hidden;
+}
+
+
+.popup {
+    width: 100%;
+    height: 100%;
+
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* =====================================================
+   FACTORIO GAME SCREEN
+===================================================== */
+
+.game-screen {
+    position: relative;
+
+    /*
+       Screenshot/interface ongeveer breedbeeld.
+       Hij wordt nu beperkt door zowel schermbreedte
+       als schermhoogte.
+    */
+
+    width: min(100vw, calc(100dvh * 2.13));
+
+    aspect-ratio: 2.13 / 1;
+
+    margin: auto;
+
+    flex-shrink: 0;
+
+    touch-action: none;
+
+    overflow: hidden;
+}
+.inventory-item {
+    position: absolute;
+
+    width: 2.6%;
+    aspect-ratio: 1 / 1;
+
+    object-fit: contain;
+
+    z-index: 20;
+
+    cursor: grab;
+
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.item1 {
+    left: 2%;
+    top: 14%;
+}
+
+.item2 {
+    left: 5%;
+    top: 14%;
+}
+
+.item3 {
+    left: 8%;
+    top: 14%;
+}
+
+.item4 {
+    left: 11%;
+    top: 14%;
+}
+
+.left-inventory {
+    position: absolute;
+
+    left: 2%;
+    top: 13%;
+
+    width: 31%;
+    height: 67%;
+
+    z-index: 5;
+}
+
+.rocket-inventory {
+    position: absolute;
+
+    left: 67.8%;
+    top: 13%;
+
+    width: 30.3%;
+    height: 14%;
+
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+
+    gap: 0.35%;
+
+    padding: 0.3%;
+}
+
+.rocket-inventory .inventory-item {
+    position: relative;
+
+    left: auto !important;
+    top: auto !important;
+
+    width: 8.5%;
+
+    flex-shrink: 0;
+}
+
+/* Achtergrond vult exact de game-screen */
+
+.inventory-background {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: fill;
+
+    display: block;
+
+    user-select: none;
+    -webkit-user-drag: none;
+
+    pointer-events: none;
+}
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="myVideo" style="width: 100%;">
+            <source src="Launch.mp4" type="video/mp4">
+        </video>
+
+        <div id="overlay" class="overlay">
+            <div class="popup">
+
+    <div class="game-screen">
+
+        <!-- Achtergrond -->
+        <img src="silo_inventory.png" class="inventory-background">
+
+        <!-- 4 versleepbare items -->
+        <img src="item1.png"
+             class="inventory-item item1"
+             draggable="true"
+             data-correct="false">
+
+        <img src="item2.png"
+             class="inventory-item item2"
+             draggable="true"
+             data-correct="false">
+
+        <!-- DIT IS HET JUISTE ITEM -->
+        <img src="item3.png"
+             class="inventory-item item3"
+             draggable="true"
+             data-correct="true">
+
+        <img src="item4.png"
+             class="inventory-item item4"
+             draggable="true"
+             data-correct="false">
+
+        <div id="leftInventory" class="left-inventory"></div>
+        <!-- Onzichtbare dropzone boven de rechter inventory -->
+        <div id="rocketInventory" class="rocket-inventory"></div>
+
+
+        <!-- Klikbare knop boven "Deliver cargo" -->
+        <button id="deliverButton" class="deliver-button">
+            Deliver cargo
+        </button>
+
+        <!-- Foutmelding -->
+        <div id="inventoryError">
+            Incorrect cargo
+        </div>
+<img id="successGif" src="success.gif" class="success-gif">
+    </div>
+
+</div>
+        </div>
+<!-- Nieuwe code popup -->
+<div id="newCodePopup" class="new-code-popup">
+
+    <div class="new-code-box">
+
+        <h2>ROCKET LAUNCH COMPLETE</h2>
+
+        <p>De toegangscode is:</p>
+
+        <div id="finalCode" class="final-code">
+            5678
+        </div>
+
+        <p>Gebruik deze code op het codeslot.</p>
+
+        <button id="closeFinalCode">
+            SLUITEN
+        </button>
+
+    </div>
+
+</div>
+        <div id="codePopup" class="code-popup">
+            <div class="code-box">
+                <h3>Voer toegangscode in</h3>
+
+                <input type="password" id="codeInput" placeholder="Code">
+                <button id="unlockButton">Unlock</button>
+
+                <p id="codeError">Onjuiste code</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    /* =====================================================
+       ELEMENTEN
+    ===================================================== */
+
+    const video = document.getElementById("myVideo");
+    const overlay = document.getElementById("overlay");
+
+    /* =====================================================
+       EERSTE CODE POPUP
+    ===================================================== */
+
+    const codePopup = document.getElementById("codePopup");
+    const codeInput = document.getElementById("codeInput");
+    const unlockButton = document.getElementById("unlockButton");
+    const codeError = document.getElementById("codeError");
+
+
+    /* =====================================================
+       INVENTORY
+    ===================================================== */
+
+    const inventoryItems =
+        document.querySelectorAll(".inventory-item");
+
+    const rocketInventory =
+        document.getElementById("rocketInventory");
+
+    const leftInventory =
+        document.getElementById("leftInventory");
+
+
+    /* =====================================================
+       DELIVER CARGO
+    ===================================================== */
+
+    const deliverButton =
+        document.getElementById("deliverButton");
+
+    const inventoryError =
+        document.getElementById("inventoryError");
+
+
+    /* =====================================================
+       GIF
+    ===================================================== */
+
+    const successGif =
+        document.getElementById("successGif");
+
+
+    /* =====================================================
+       EIND CODE POPUP
+    ===================================================== */
+
+    const finalCodePopup =
+        document.getElementById("newCodePopup");
+
+    const finalCode =
+        document.getElementById("finalCode");
+
+    const closeFinalCode =
+        document.getElementById("closeFinalCode");
+
+
+    /* =====================================================
+       CODES
+    ===================================================== */
+
+    // Code om de inventory te openen
+    const juisteCode = "369";
+
+    // Code die na de video wordt getoond
+    // Deze code is bedoeld voor het echte codeslot.
+    const eindCode = "5678";
+
+
+    /* =====================================================
+       GIF DUUR
+    ===================================================== */
+
+    // 5000 = 5 seconden
+    //
+    // Pas dit aan naar de lengte van jouw GIF.
+
+    const gifDuur = 0;
+
+
+    /* =====================================================
+       VIDEO
+    ===================================================== */
+
+    video.pause();
+
+
+    /* =====================================================
+       VIDEO AANKLIKKEN
+    ===================================================== */
+
+    video.addEventListener("click", () => {
+
+        codePopup.style.display = "flex";
+
+        codeInput.value = "";
+
+        codeError.style.display = "none";
+
+        codeInput.focus();
+
+    });
+
+
+    /* =====================================================
+       EERSTE CODE CONTROLEREN
+    ===================================================== */
+
+    unlockButton.addEventListener("click", () => {
+
+        if (codeInput.value === juisteCode) {
+
+            /*
+               Juiste code
+            */
+
+            codeError.style.display = "none";
+
+            codePopup.style.display = "none";
+
+            /*
+               Inventory tonen
+            */
+
+            overlay.style.display = "flex";
+
+        } else {
+
+            /*
+               Verkeerde code
+            */
+
+            codeError.style.display = "block";
+
+            codeInput.value = "";
+
+            codeInput.focus();
+
+        }
+
+    });
+
+
+    /* =====================================================
+       ENTER BIJ EERSTE CODE
+    ===================================================== */
+
+    codeInput.addEventListener("keydown", (e) => {
+
+        if (e.key === "Enter") {
+
+            unlockButton.click();
+
+        }
+
+    });
+
+
+    /* =====================================================
+       DRAG & DROP
+       WERKT MET MUIS EN TOUCH
+    ===================================================== */
+
+    let draggedItem = null;
+    let isDragging = false;
+
+    let startX = 0;
+    let startY = 0;
+
+
+    /* =====================================================
+       ITEMS INSTELLEN
+    ===================================================== */
+
+    inventoryItems.forEach(item => {
+
+
+        /* -------------------------------------------------
+           TOUCH / MOUSE START
+        ------------------------------------------------- */
+
+        item.addEventListener("pointerdown", (e) => {
+
+            e.preventDefault();
+
+            draggedItem = item;
+
+            isDragging = true;
+
+            startX = e.clientX;
+            startY = e.clientY;
+
+            /*
+               Pointer blijven volgen
+            */
+
+            item.setPointerCapture(e.pointerId);
+
+
+            /*
+               Item boven andere elementen plaatsen
+            */
+
+            item.style.zIndex = "100";
+
+            item.style.opacity = "0.7";
+
+        });
+
+
+        /* -------------------------------------------------
+           ITEM BEWEGEN
+        ------------------------------------------------- */
+
+        item.addEventListener("pointermove", (e) => {
+
+            if (!isDragging || draggedItem !== item) {
+                return;
+            }
+
+            e.preventDefault();
+
+
+            /*
+               Verschil berekenen tussen
+               startpunt en huidige positie
+            */
+
+            const deltaX =
+                e.clientX - startX;
+
+            const deltaY =
+                e.clientY - startY;
+
+
+            /*
+               Item laten bewegen
+            */
+
+            item.style.transform =
+                `translate(${deltaX}px, ${deltaY}px)`;
+
+        });
+
+
+        /* -------------------------------------------------
+           ITEM LOSLATEN
+        ------------------------------------------------- */
+
+        item.addEventListener("pointerup", (e) => {
+
+            if (!isDragging || draggedItem !== item) {
+                return;
+            }
+
+            e.preventDefault();
+
+
+            /*
+               Huidige positie van pointer
+            */
+
+            const x = e.clientX;
+            const y = e.clientY;
+
+
+            /*
+               Item tijdelijk onzichtbaar maken
+               zodat elementFromPoint correct werkt
+            */
+
+            item.style.visibility = "hidden";
+
+
+            const elementUnderPointer =
+                document.elementFromPoint(x, y);
+
+
+            item.style.visibility = "visible";
+
+
+            /* =================================================
+               CONTROLEREN RECHTER INVENTORY
+            ================================================= */
+
+            const droppedInRocketInventory =
+                elementUnderPointer &&
+                (
+                    elementUnderPointer === rocketInventory ||
+                    elementUnderPointer.closest("#rocketInventory")
+                );
+
+
+            /* =================================================
+               CONTROLEREN LINKER INVENTORY
+            ================================================= */
+
+            const droppedInLeftInventory =
+                elementUnderPointer &&
+                (
+                    elementUnderPointer === leftInventory ||
+                    elementUnderPointer.closest("#leftInventory")
+                );
+
+
+            /* =================================================
+               ITEM NAAR RECHTS
+            ================================================= */
+
+            if (droppedInRocketInventory) {
+               rocketInventory.appendChild(item);
+
+    item.style.position = "relative";
+    item.style.left = "auto";
+    item.style.top = "auto";
+    item.style.transform = "none";
+
+    item.style.width = "";
+    item.style.height = "";
+
+    inventoryError.style.display = "none";
+
+    updateDeliverButton();
+            }
+
+
+            /* =================================================
+               ITEM TERUG NAAR LINKS
+            ================================================= */
+
+            else if (droppedInLeftInventory) {
+
+               const gameScreen = document.querySelector(".game-screen");
+
+    gameScreen.appendChild(item);
+
+    if (item.classList.contains("item1")) {
+        item.style.left = "2%";
+        item.style.top = "14%";
+    }
+
+    if (item.classList.contains("item2")) {
+        item.style.left = "5%";
+        item.style.top = "14%";
+    }
+
+    if (item.classList.contains("item3")) {
+        item.style.left = "8%";
+        item.style.top = "14%";
+    }
+
+    if (item.classList.contains("item4")) {
+        item.style.left = "11%";
+        item.style.top = "14%";
+    }
+
+    item.style.position = "absolute";
+    item.style.width = "2.6%";
+    item.style.transform = "none";
+
+    inventoryError.style.display = "none";
+
+    updateDeliverButton();
+            }
+
+
+            /* =================================================
+               ITEM NIET OP EEN INVENTORY GEPLAATST
+            ================================================= */
+
+            else {
+
+                /*
+                   Terug naar originele positie
+                */
+
+                item.style.transform = "none";
+
+            }
+
+
+            /* =================================================
+               RESET
+            ================================================= */
+
+            item.style.opacity = "1";
+
+            item.style.zIndex = "20";
+
+            draggedItem = null;
+
+            isDragging = false;
+
+        });
+
+
+        /* -------------------------------------------------
+           DRAG CANCEL
+        ------------------------------------------------- */
+
+        item.addEventListener("pointercancel", () => {
+
+            item.style.transform = "none";
+
+            item.style.opacity = "1";
+
+            item.style.zIndex = "20";
+
+            draggedItem = null;
+
+            isDragging = false;
+
+        });
+
+    });
+
+
+    /* =====================================================
+       DELIVER CARGO
+    ===================================================== */
+
+    deliverButton.addEventListener("click", () => {
+const correctItem =
+        rocketInventory.querySelector(
+            '.inventory-item[data-correct="true"]'
+        );
+
+    /* Verkeerd cargo */
+    if (!correctItem) {
+        inventoryError.style.display = "flex";
+        return;
+    }
+
+    /* Correct cargo */
+    inventoryError.style.display = "none";
+
+    deliverButton.classList.remove("ready");
+
+    overlay.style.display = "none";
+    successGif.style.display = "block";
+
+    setTimeout(() => {
+        successGif.style.display = "none";
+        video.play();
+    }, gifDuur);
+
+        
+
+    });
+
+
+    /* =====================================================
+       VIDEO IS AFGELOPEN
+    ===================================================== */
+
+    video.addEventListener("ended", () => {
+
+        /*
+           Code in popup plaatsen
+        */
+
+        finalCode.textContent = eindCode;
+
+
+        /*
+           Popup met de echte codeslot-code tonen
+        */
+
+        finalCodePopup.style.display = "flex";
+
+    });
+
+
+    /* =====================================================
+       EIND CODE POPUP SLUITEN
+    ===================================================== */
+
+    closeFinalCode.addEventListener("click", () => {
+
+        finalCodePopup.style.display = "none";
+
+    });
+
+
+    function updateDeliverButton() {
+    const hasItem =
+        rocketInventory.querySelector(".inventory-item") !== null;
+
+    if (hasItem) {
+        deliverButton.classList.add("ready");
+    } else {
+        deliverButton.classList.remove("ready");
+    }
+}
+
+</script>
