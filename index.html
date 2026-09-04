@@ -1008,7 +1008,12 @@ body {
 </head>
 <body>
     <div class="video-container">
-        <video id="myVideo" style="width: 100%;">
+        <video id="myVideo"
+               playsinline
+               webkit-playsinline
+               preload="metadata"
+               poster="poster.jpg"
+               style="width: 100%;">
             <source src="Launch.mp4" type="video/mp4">
         </video>
 
@@ -1056,7 +1061,8 @@ body {
         <div id="inventoryError">
             Incorrect cargo
         </div>
-<img id="successGif" src="success.gif" class="success-gif">
+<!-- Zet hier een src="..." naar een echt GIF-bestand als je er een wilt tonen -->
+<img id="successGif" class="success-gif" alt="">
     </div>
 
 </div>
@@ -1066,7 +1072,7 @@ body {
     <div class="new-code-box">
 
         <h2>ROCKET LAUNCH COMPLETE</h2>
-        
+
         <div id="finalCode" class="final-code">
             5678
         </div>
@@ -1536,14 +1542,22 @@ const correctItem =
     deliverButton.classList.remove("ready");
 
     overlay.style.display = "none";
-    successGif.style.display = "block";
 
-    setTimeout(() => {
-        successGif.style.display = "none";
-        video.play();
-    }, gifDuur);
+    video.play();
 
-        
+    if (gifDuur > 0) {
+        video.pause();
+
+        successGif.style.display = "block";
+
+        setTimeout(() => {
+            successGif.style.display = "none";
+            video.play();
+        }, gifDuur);
+
+    }
+
+
 
     });
 
