@@ -516,7 +516,7 @@ header {
 }
 
 .new-code-box {
-    width: min(90vw, 450px);
+    width: min(90vw, 650px);
 
     background: var(--panel-bg);
 
@@ -550,14 +550,14 @@ header {
 
 .final-code {
     margin: 25px 0;
-
+    padding: 10px;
     color: var(--factorio-orange);
 
-    font-size: clamp(36px, 12vw, 60px);
+    font-size: clamp(20px, 12vw, 20px);
 
     font-weight: bold;
 
-    letter-spacing: clamp(5px, 2vw, 12px);
+    letter-spacing: clamp(5px, 2vw, 6px);
 
     text-align: center;
 }
@@ -592,7 +592,6 @@ header {
 
 #newCodeError {
     display: none;
-
     color: var(--danger-red);
 }
 
@@ -1064,25 +1063,18 @@ body {
         </div>
 <!-- Nieuwe code popup -->
 <div id="newCodePopup" class="new-code-popup">
-
     <div class="new-code-box">
 
         <h2>ROCKET LAUNCH COMPLETE</h2>
-
-        <p>De toegangscode is:</p>
-
+        
         <div id="finalCode" class="final-code">
             5678
         </div>
 
-        <p>Gebruik deze code op het codeslot.</p>
-
         <button id="closeFinalCode">
             SLUITEN
         </button>
-
     </div>
-
 </div>
         <div id="codePopup" class="code-popup">
             <div class="code-box">
@@ -1171,7 +1163,7 @@ body {
 
     // Code die na de video wordt getoond
     // Deze code is bedoeld voor het echte codeslot.
-    const eindCode = "5678";
+    const eindCode = "Uw pakketje is verstuurd";
 
 
     /* =====================================================
@@ -1417,17 +1409,17 @@ body {
             if (droppedInRocketInventory) {
                rocketInventory.appendChild(item);
 
-    item.style.position = "relative";
-    item.style.left = "auto";
-    item.style.top = "auto";
-    item.style.transform = "none";
+                item.style.position = "relative";
+                item.style.left = "auto";
+                item.style.top = "auto";
+                item.style.transform = "none";
 
-    item.style.width = "";
-    item.style.height = "";
+                item.style.width = "";
+                item.style.height = "";
 
-    inventoryError.style.display = "none";
+                inventoryError.style.display = "none";
 
-    updateDeliverButton();
+                updateDeliverButton();
             }
 
 
